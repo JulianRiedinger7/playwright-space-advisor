@@ -2,14 +2,18 @@ import { Locator, Page } from '@playwright/test';
 
 export class LoginPage {
   readonly usernameInput: Locator;
+  readonly usernameInputError: Locator;
   readonly passwordInput: Locator;
+  readonly passwordInputError: Locator;
   readonly loginBtn: Locator;
   readonly page: Page;
 
   constructor(page: Page) {
     this.page = page;
     this.usernameInput = page.locator('#login').locator('input[type="text"]');
+    this.usernameInputError = page.locator('#login > div').first().locator('span').last();
     this.passwordInput = page.locator('#login').locator('input[type="password"]');
+    this.passwordInputError = page.locator('#login > div').last().locator('span').last();
     this.loginBtn = page.locator('button[form="login"]');
   }
 

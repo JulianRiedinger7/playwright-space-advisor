@@ -22,4 +22,46 @@ test.describe('Login Suite', () => {
       await expect(homePage.welcomeMessage).toHaveText('Hello, John');
     });
   });
+
+  test('Incorrect login with empty credentials', async ({ page }) => {
+    await test.step('When I login with empty credentials', async () => {
+      await loginPage.clickLoginBtn();
+    });
+
+    await test.step('Then I should see the username and password field error messages', async () => {
+      await expect(loginPage.page).toHaveURL(/login/);
+      await expect(loginPage.usernameInputError).toBeVisible();
+      await expect(loginPage.passwordInputError).toBeVisible();
+      await expect(loginPage.usernameInputError).toHaveText('Name is a required field.');
+      await expect(loginPage.passwordInputError).toHaveText('Password is a required field.');
+    });
+  });
+
+  test('Incorrect login with empty password', async ({ page }) => {
+    await test.step('When I login with empty password', async () => {
+      await loginPage.enterUsername(credentials.username);
+      await loginPage.clickLoginBtn();
+    });
+
+    await test.step('Then I should see the password field error message', async () => {
+      await expect(loginPage.page).toHaveURL(/login/);
+      await expect(loginPage.usernameInputError).not.toBeVisible();
+      await expect(loginPage.passwordInputError).toBeVisible();
+      await expect(loginPage.passwordInputError).toHaveText('Password is a required field.');
+    });
+  });
+
+  test('Incorrect login with empty username', async ({ page }) => {
+    await test.step('When I login with empty username', async () => {
+      await loginPage.enterPassword(credentials.password);
+      await loginPage.clickLoginBtn();
+    });
+
+    await test.step('Then I should see the username field error message', async () => {
+      await expect(loginPage.page).toHaveURL(/login/);
+      await expect(loginPage.passwordInputError).not.toBeVisible();
+      await expect(loginPage.usernameInputError).toBeVisible();
+      await expect(loginPage.usernameInputError).toHaveText('Name is a required field.');
+    });
+  });
 });
