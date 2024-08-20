@@ -37,4 +37,25 @@ test.describe('Booking Suite', () => {
       );
     });
   });
+
+  test('Promo code applied correctly', async ({ page }) => {
+    await test.step('When I book the first planet destination', async () => {
+      await destinationPage.bookFirstPlanet();
+    });
+
+    await test.step('And I apply a promo code', async () => {
+      checkoutPage = new CheckoutPage(page);
+      await checkoutPage.enterPromoCode('PROMO');
+    });
+
+    await test.step('Then I should see the promo applied correctly', async () => {
+      const subTotal = await checkoutPage.subTotalText.textContent();
+
+      if (subTotal !== null) {
+        await expect(checkoutPage.totalText).not.toHaveText(subTotal);
+      } else {
+        throw new Error('Sub total text content is null');
+      }
+    });
+  });
 });
